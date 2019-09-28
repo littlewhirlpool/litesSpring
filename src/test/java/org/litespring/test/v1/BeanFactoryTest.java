@@ -7,6 +7,7 @@ import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.BeanDefinitionStoreException;
 import org.litespring.beans.factory.BeanFactory;
 import org.litespring.beans.factory.support.DefaultBeanFactory;
+import org.litespring.beans.factory.xml.XmlBeanDefinitionReader;
 import org.litespring.service.v1.PetStoreService;
 
 import static org.junit.Assert.*;
@@ -22,8 +23,10 @@ public class BeanFactoryTest {
     @Test
     public void testGetBean() {
 
-        // 初始化工厂
-        BeanFactory factory = new DefaultBeanFactory("petstore-v1.xml");
+        DefaultBeanFactory factory = new DefaultBeanFactory();
+        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+        reader.loadBeanDefinitions("petstore-v1.xml");
+
         // 工厂类根据bean的名称得到bean的定义类
         BeanDefinition bd = factory.getBeanDefinition("petStore");
 
@@ -38,7 +41,9 @@ public class BeanFactoryTest {
 
     @Test
     public void testInvalidBean(){
-         BeanFactory factory = new DefaultBeanFactory("petstore-v1.xml");;
+        DefaultBeanFactory factory = new DefaultBeanFactory();
+        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+        reader.loadBeanDefinitions("petstore-v1.xml");
 
         try {
             factory.getBean("invalidBean");
@@ -52,7 +57,9 @@ public class BeanFactoryTest {
     @Test
     public void testInvalidXML(){
         try {
-            new DefaultBeanFactory("xxx.xml");
+            DefaultBeanFactory factory = new DefaultBeanFactory();
+            XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+            reader.loadBeanDefinitions("xxx.xml");
         }catch (BeanDefinitionStoreException e){
             return;
         }

@@ -22,66 +22,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author: weizhenfang
  * @create: 2019-09-24 21:07
  **/
-public class DefaultBeanFactory implements BeanFactory {
-
-    public static final String ID_ATTRIBUTE = "id";
-
-    public static final String CLASS_ATTRIBUTE = "class";
-
+public class DefaultBeanFactory implements BeanFactory , BeanDefinitionRegistry {
     // 类定义的id-定义 键值对  map  注意键值对的类型
     private final Map<String , BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
 
-
-    public DefaultBeanFactory(String configFile) {
-        loadBeanDefinition(configFile);
+    public DefaultBeanFactory() {
     }
 
-    /**
-     * 加载类的定义
-     * @param configFile 文件名 根路径
-     */
-    private void loadBeanDefinition(String configFile) {
-        InputStream is = null;
-        try {
-            // 通过classloader 得到配置文件
-            ClassLoader cl = ClassUtils.getDefaultClassLoader();
-            is = cl.getResourceAsStream(configFile);
 
-            // 使用dom4j 读取配置文件
-            SAXReader reader = new SAXReader();
-            Document doc = reader.read(is);
-
-            Element root = doc.getRootElement();
-            Iterator iter = root.elementIterator();
-
-            // 遍历beans 标签下的子标签 bean标签
-            while (iter.hasNext()){
-                Element ele = (Element) iter.next();  //得到element
-                String id = ele.attributeValue(ID_ATTRIBUTE);   //得到id属性值
-                String beanClassName = ele.attributeValue(CLASS_ATTRIBUTE);  //得到class属性值
-                BeanDefinition bd = new GenericBeanDefinition(id,beanClassName);  //构建一个类的定义类对象
-                this.beanDefinitionMap.put(id,bd);  // 将定义类对象放到Factory的beanDefinitionMap中去 id为key
-            }
-
-        } catch (DocumentException e) {
-            throw new BeanDefinitionStoreException("IOExcepton parsing XML document" , e);
-        }finally {
-            if(is != null){
-                try{
-                    is.close();
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-            }
-
-        }
-    }
-
-    /**
-     * 根据类的id得到类的定义对象
-     * @param beanID
-     * @return
-     */
     public BeanDefinition getBeanDefinition(String beanID) {
         return this.beanDefinitionMap.get(beanID);
     }
@@ -106,5 +54,16 @@ public class DefaultBeanFactory implements BeanFactory {
         } catch (Exception e) {
             throw new BeanCreationException("create bean for" + beanClassName + " faild" , e);
         }
+    }
+
+
+    /**
+     * 注册类的定义
+     * 属于BeanDefinitionRegistry接口供其他拥有factory对象的对象给factory注册类的定义
+     * @param beanID
+     * @param bd
+     */
+    public void registerBeanDefinition(String beanID, GenericBeanDefinition bd) {
+        this.beanDefinitionMap.put(beanID,bd);
     }
 }

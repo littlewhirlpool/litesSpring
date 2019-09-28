@@ -7,10 +7,6 @@ package org.litespring.util;
  * @create: 2019-09-24 22:42
  **/
 public class ClassUtils {
-    /**
-     * 得到类的加载器
-     * @return
-     */
     public static ClassLoader getDefaultClassLoader(){
         ClassLoader cl = null;
         try {
