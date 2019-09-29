@@ -29,7 +29,7 @@ public class BeanFactoryTest {
     @Before
     public void setUP(){
         factory = new DefaultBeanFactory();
-        reader = new XmlBeanDefinitionReader(factory);
+        reader = new XmlBeanDefinitionReader(factory);  //组合优于继承,这里DefaultBeanFactory实现了两个接口 , reader需要其中一个接口的子类作为参数,那么factory满足条件使用
     }
 
 
