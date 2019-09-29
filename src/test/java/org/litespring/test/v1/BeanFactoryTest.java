@@ -1,6 +1,7 @@
 package org.litespring.test.v1;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.factory.BeanCreationException;
@@ -19,12 +20,23 @@ import static org.junit.Assert.*;
  * @create: 2019-09-24 20:06
  **/
 public class BeanFactoryTest {
+    DefaultBeanFactory factory = null;
+    XmlBeanDefinitionReader reader = null;
+
+    /**
+     * 每次的测试用例使用的工厂对象和reader都是最新的 , 防止互相污染
+     */
+    @Before
+    public void setUP(){
+        factory = new DefaultBeanFactory();
+        reader = new XmlBeanDefinitionReader(factory);
+    }
+
 
     @Test
     public void testGetBean() {
 
-        DefaultBeanFactory factory = new DefaultBeanFactory();
-        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
+
         reader.loadBeanDefinitions("petstore-v1.xml");
 
         // 工厂类根据bean的名称得到bean的定义类
@@ -41,8 +53,6 @@ public class BeanFactoryTest {
 
     @Test
     public void testInvalidBean(){
-        DefaultBeanFactory factory = new DefaultBeanFactory();
-        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
         reader.loadBeanDefinitions("petstore-v1.xml");
 
         try {
@@ -57,8 +67,6 @@ public class BeanFactoryTest {
     @Test
     public void testInvalidXML(){
         try {
-            DefaultBeanFactory factory = new DefaultBeanFactory();
-            XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
             reader.loadBeanDefinitions("xxx.xml");
         }catch (BeanDefinitionStoreException e){
             return;
