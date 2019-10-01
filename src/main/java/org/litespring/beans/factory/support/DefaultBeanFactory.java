@@ -36,7 +36,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
     public Object getBean(String beanID) {
         BeanDefinition bd = this.getBeanDefinition(beanID);  //通过id得到类的定义对象
         if (bd == null){
-            return null;
+            throw new BeanCreationException("Bean Definition does not exist");
         }
 
         if(bd.isSingleton()){

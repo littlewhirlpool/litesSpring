@@ -25,13 +25,17 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
      * @param configFile
      */
     public AbstractApplicationContext(String configFile) {
+        this(configFile,ClassUtils.getDefaultClassLoader());
+    }
+
+    public AbstractApplicationContext(String configFile,ClassLoader cl) {
         // 新建factory对象
         factory = new DefaultBeanFactory();
         // 将factory传递给BeanDefinitionReader 这样当它读取配置文件后就可以调用factory的registerBeanDefinition祖册类的定义
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
         Resource resource = getResourceByPath(configFile);
         reader.loadBeanDefinitions(resource);
-        factory.setBeanClassLoader(this.getBeanClassLoader());
+        factory.setBeanClassLoader(cl);
     }
 
     /**
