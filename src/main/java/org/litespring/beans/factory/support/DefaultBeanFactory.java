@@ -14,7 +14,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author: weizhenfang
  * @create: 2019-09-24 21:07
  **/
-public class DefaultBeanFactory implements  BeanDefinitionRegistry , ConfigurableBeanFactory {
+public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
+        implements  BeanDefinitionRegistry , ConfigurableBeanFactory {
     // 类定义的id-定义 键值对  map  注意键值对的类型
     private final Map<String , BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
     private ClassLoader beanClassLoader;
@@ -35,17 +36,35 @@ public class DefaultBeanFactory implements  BeanDefinitionRegistry , Configurabl
     public Object getBean(String beanID) {
         BeanDefinition bd = this.getBeanDefinition(beanID);  //通过id得到类的定义对象
         if (bd == null){
-            throw new BeanCreationException("Bean Definition does not exist");
+            return null;
         }
 
-        ClassLoader cl = this.getBeanClassLoader();
-        String beanClassName = bd.getBeanClassName();  //通过类的定义对象得到类的classname
+        if(bd.isSingleton()){
+            // 单例
+            // 通过beanID获取实例
+            Object bean = this.getSingleton(beanID);
+            if(bean == null){
+                // 获取为空 可能是未注册
+                // 创建bean并注册
+                bean = createBean(bd);
+                this.registerSingleton(beanID , bean);
+            }
+            return bean;
+        }
 
+        return createBean(bd);
+    }
+
+    private Object createBean (BeanDefinition bd){
+        ClassLoader cl = this.getBeanClassLoader();
+        //通过类的定义对象得到类的classname
+        String beanClassName = bd.getBeanClassName();
         try {
-            Class<?> clz = cl.loadClass(beanClassName);  //使用类的加载器 加载类的字节码对象
-            return clz.newInstance(); //反射得到实例
-        } catch (Exception e) {
-            throw new BeanCreationException("create bean for" + beanClassName + " faild" , e);
+            //使用类的加载器 加载类的字节码对象
+            Class<?> clz = cl.loadClass(beanClassName);
+            return clz.newInstance();
+        }catch (Exception e){
+            throw new BeanCreationException("create bean for " + beanClassName + "failed" , e);
         }
     }
 
