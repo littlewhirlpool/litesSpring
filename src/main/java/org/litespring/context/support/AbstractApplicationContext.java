@@ -18,16 +18,18 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
     protected DefaultBeanFactory factory = null;  //protected修饰 子类继承
 
     /**
-     * 共同的方法
+     * 共同的构造代码
+     * ApplicationContext的功能:封装对factory的使用
+     * ApplicationContext
      * @param configFile
      */
     public AbstractApplicationContext(String configFile) {
+        // 新建factory对象
         factory = new DefaultBeanFactory();
+        // 将factory传递给BeanDefinitionReader 这样当它读取配置文件后就可以调用factory的registerBeanDefinition祖册类的定义
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
         Resource resource = getResourceByPath(configFile);
         reader.loadBeanDefinitions(resource);
-
-
     }
 
     /**
