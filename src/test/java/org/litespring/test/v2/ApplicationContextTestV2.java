@@ -5,7 +5,7 @@ import org.litespring.context.ApplicationContext;
 import org.litespring.context.support.ClassPathXmlApplicationContext;
 import org.litespring.service.v2.PetStoreService;
 
-import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.*;
 
 /**
  * @program: litespring->test
@@ -22,6 +22,9 @@ public class ApplicationContextTestV2 {
         // 测试注入是否成功
         assertNotNull(petStore.getAccountDao());
         assertNotNull(petStore.getItemDao());
+
+
+        assertEquals("wzf" , petStore.getOwner());
     }
 
 }

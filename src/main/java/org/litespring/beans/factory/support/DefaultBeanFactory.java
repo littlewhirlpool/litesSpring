@@ -1,10 +1,15 @@
 package org.litespring.beans.factory.support;
 
 import org.litespring.beans.BeanDefinition;
+import org.litespring.beans.PropertyValue;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 import org.litespring.util.ClassUtils;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -56,6 +61,15 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
     }
 
     private Object createBean (BeanDefinition bd){
+        // 创建实例
+        Object bean = instantiateBean(bd);
+        // 设置属性
+        populateBean(bd,bean);
+
+        return bean;
+    }
+
+    private Object instantiateBean(BeanDefinition bd){
         ClassLoader cl = this.getBeanClassLoader();
         //通过类的定义对象得到类的classname
         String beanClassName = bd.getBeanClassName();
@@ -65,6 +79,43 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
             return clz.newInstance();
         }catch (Exception e){
             throw new BeanCreationException("create bean for " + beanClassName + "failed" , e);
+        }
+    }
+
+    protected void populateBean(BeanDefinition bd , Object bean){
+        // 得到bd 的 PropertyValues
+        List<PropertyValue> pvs = bd.getPropertyValues();
+
+        if(pvs == null || pvs.isEmpty()){
+            return;
+        }
+
+        // 得到 BeanDefinitionValueResolver 对象 用来得到BeanDefinitionValue(bd的propertyValues封装的是property标签对象)映射的对象
+        BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this);
+
+        try {
+            for (PropertyValue pv : pvs) {
+                String propertyName = pv.getName();
+                Object originalValue = pv.getValue();
+                // 调用resolveValueIfNecessary方法传入value 得到映射的对象(ref/typedString)
+                Object resolvedValue = valueResolver.resolveValueIfNecessary(originalValue);
+
+                // 得到bean的BeanInfo对象
+                BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
+                // 得到bean的property的description
+                PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+                for (PropertyDescriptor pd : pds) {
+                    // 如果bean的属性名和配置文件得到的pv的name相同
+                    if(pd.getName().equals(propertyName)){
+                        // 得到该属性的set方法 将对于的对象传递进去
+                        pd.getWriteMethod().invoke(bean,resolvedValue);
+                        break;
+                    }
+                }
+            }
+        }catch (Exception e){
+            throw new BeanCreationException("Failed to obtain BeanInfo for class ["
+            + bd.getBeanClassName() + "]",e);
         }
     }
 
