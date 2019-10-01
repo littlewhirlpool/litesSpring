@@ -2,8 +2,6 @@ package org.litespring.beans.factory;
 
 import org.litespring.beans.BeansException;
 
-import java.util.Scanner;
-
 /**
  * @program: litespring->BeanCreationException
  * @description: 创建bean时抛出的异常
