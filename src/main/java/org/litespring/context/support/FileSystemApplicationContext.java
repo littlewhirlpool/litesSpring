@@ -13,7 +13,7 @@ import org.litespring.core.io.Resource;
  * @author: weizhenfang
  * @create: 2019-09-30 09:03
  **/
-public class FileSystemApplicationContext extends AbstractApplicationContext implements ApplicationContext {
+public class FileSystemApplicationContext extends AbstractApplicationContext {
 
     public FileSystemApplicationContext(String configFile) {
         super(configFile);

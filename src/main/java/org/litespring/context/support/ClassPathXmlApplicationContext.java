@@ -13,7 +13,7 @@ import org.litespring.core.io.Resource;
  * @author: weizhenfang
  * @create: 2019-09-29 22:39
  **/
-public class ClassPathXmlApplicationContext extends AbstractApplicationContext implements ApplicationContext {
+public class ClassPathXmlApplicationContext extends AbstractApplicationContext {
 
 
     public ClassPathXmlApplicationContext(String configFile) {
