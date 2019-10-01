@@ -28,7 +28,8 @@ public class ApplicationContextTest {
     @Test
     public void testGetBeanFromFileSystemContext(){
         // 注意啊 , 这里仍然hardcode了一个本地路径,这不是好的实践
-        ApplicationContext ctx = new FileSystemApplicationContext("G:\\code\\litespring\\src\\test\\resources\\petstore-v1.xml");
+//        ApplicationContext ctx = new FileSystemApplicationContext("G:\\code\\litespring\\src\\test\\resources\\petstore-v1.xml");
+        ApplicationContext ctx = new FileSystemApplicationContext("src/test/resources/petstore-v1.xml");
         PetStoreService petStore = (PetStoreService) ctx.getBean("petStore");
         Assert.assertNotNull(petStore);
 
