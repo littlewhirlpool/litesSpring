@@ -33,6 +33,12 @@ public class XmlBeanDefinitionReader {
         this.registry = registry;
     }
 
+    /**
+     * 得到配置文件的inputStream 解析得到BeanDefinition
+     * 再调用registry的registerBeanDefinition注册
+     * (这里其实就是注册给了实现Registry接口的DefaultBeanFactory的beanDefinitionMap)
+     * @param resource
+     */
     public void loadBeanDefinitions(Resource resource) {
         InputStream is = null;
         try {

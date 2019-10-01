@@ -25,6 +25,6 @@ public class FileSystemApplicationContext extends AbstractApplicationContext {
     }
 
     protected Resource getResourceByPath(String path) {
-        return new FileSystemResource(path);
+        return new FileSystemResource(path);  //使用FileSystemResource得到Resource
     }
 }
