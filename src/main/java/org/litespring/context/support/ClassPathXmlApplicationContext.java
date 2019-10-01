@@ -13,20 +13,18 @@ import org.litespring.core.io.Resource;
  * @author: weizhenfang
  * @create: 2019-09-29 22:39
  **/
-public class ClassPathXmlApplicationContext implements ApplicationContext {
+public class ClassPathXmlApplicationContext extends AbstractApplicationContext implements ApplicationContext {
 
-    private DefaultBeanFactory factory = null;
 
     public ClassPathXmlApplicationContext(String configFile) {
-        factory = new DefaultBeanFactory();
-        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
-        Resource resource = new ClassPathResource(configFile);
-        reader.loadBeanDefinitions(resource);
-
-
+        super(configFile);
     }
 
     public Object getBean(String beanID) {
         return factory.getBean(beanID);
+    }
+
+    protected Resource getResourceByPath(String path) {
+        return new ClassPathResource(path);
     }
 }
