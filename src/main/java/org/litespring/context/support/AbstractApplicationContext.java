@@ -16,6 +16,7 @@ import org.litespring.util.ClassUtils;
  **/
 public abstract class AbstractApplicationContext implements ApplicationContext {
     protected DefaultBeanFactory factory = null;  //protected修饰 子类继承
+    private ClassLoader beanClassLoader;
 
     /**
      * 共同的构造代码
@@ -30,6 +31,7 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
         XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(factory);
         Resource resource = getResourceByPath(configFile);
         reader.loadBeanDefinitions(resource);
+        factory.setBeanClassLoader(this.getBeanClassLoader());
     }
 
     /**
@@ -47,4 +49,12 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
      * @return
      */
     protected abstract Resource getResourceByPath (String path);
-}
+
+    public void setBeanClassLoader(ClassLoader beanClassLoader) {
+        this.beanClassLoader = beanClassLoader;
+    }
+
+    public ClassLoader getBeanClassLoader(){
+        return (this.beanClassLoader != null ? this.beanClassLoader : ClassUtils.getDefaultClassLoader());
+
+    }}

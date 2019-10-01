@@ -2,7 +2,6 @@ package org.litespring.beans.factory.support;
 
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.factory.BeanCreationException;
-import org.litespring.beans.factory.BeanFactory;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 import org.litespring.util.ClassUtils;
 
@@ -15,9 +14,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author: weizhenfang
  * @create: 2019-09-24 21:07
  **/
-public class DefaultBeanFactory implements BeanFactory , BeanDefinitionRegistry {
+public class DefaultBeanFactory implements  BeanDefinitionRegistry , ConfigurableBeanFactory {
     // 类定义的id-定义 键值对  map  注意键值对的类型
     private final Map<String , BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
+    private ClassLoader beanClassLoader;
 
     public DefaultBeanFactory() {
     }
@@ -38,7 +38,7 @@ public class DefaultBeanFactory implements BeanFactory , BeanDefinitionRegistry 
             throw new BeanCreationException("Bean Definition does not exist");
         }
 
-        ClassLoader cl = ClassUtils.getDefaultClassLoader();
+        ClassLoader cl = this.getBeanClassLoader();
         String beanClassName = bd.getBeanClassName();  //通过类的定义对象得到类的classname
 
         try {
@@ -58,5 +58,13 @@ public class DefaultBeanFactory implements BeanFactory , BeanDefinitionRegistry 
      */
     public void registerBeanDefinition(String beanID, GenericBeanDefinition bd) {
         this.beanDefinitionMap.put(beanID,bd);
+    }
+
+    public void setBeanClassLoader(ClassLoader beanClassLoader) {
+       this.beanClassLoader = beanClassLoader;
+    }
+
+    public ClassLoader getBeanClassLoader() {
+        return (this.beanClassLoader != null ? this.beanClassLoader:ClassUtils.getDefaultClassLoader());
     }
 }
