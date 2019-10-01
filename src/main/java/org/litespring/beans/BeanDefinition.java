@@ -1,5 +1,7 @@
 package org.litespring.beans;
 
+import java.util.List;
+
 /**
  * @program: litespring->BeanDefinition
  * @description: 类的定义接口
@@ -15,5 +17,7 @@ public interface BeanDefinition {
     String getScope();
     void setScope(String scope);
     String getBeanClassName() ;
+
+    public List<PropertyValue> getPropertyValues();
 
 }
