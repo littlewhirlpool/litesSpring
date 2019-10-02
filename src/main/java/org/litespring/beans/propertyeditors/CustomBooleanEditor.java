@@ -43,7 +43,7 @@ public class CustomBooleanEditor extends PropertyEditorSupport {
         /**
          * 如果input值含义和true相同
          */
-        if ((VALUE_TRUE.equalsIgnoreCase(input) || VALUE_ON.equalsIgnoreCase(input) ||
+        else if ((VALUE_TRUE.equalsIgnoreCase(input) || VALUE_ON.equalsIgnoreCase(input) ||
                 VALUE_YES.equalsIgnoreCase(input) || VALUE_1.equals(input))) {
             // 保存为 true 到 value
             setValue(Boolean.TRUE);
