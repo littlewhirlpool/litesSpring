@@ -106,6 +106,10 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this);
 
         try {
+            // 得到bean的BeanInfo对象
+            BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
+            // 得到bean的property的description
+            PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
             // 遍历每一个property标签解析出的 PropertyValue对象
             for (PropertyValue pv : pvs) {
                 String propertyName = pv.getName();
@@ -114,10 +118,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
                 Object resolvedValue = valueResolver.resolveValueIfNecessary(originalValue);
                 SimpleTypeConverter converter = new SimpleTypeConverter();
 
-                // 得到bean的BeanInfo对象
-                BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
-                // 得到bean的property的description
-                PropertyDescriptor[] pds = beanInfo.getPropertyDescriptors();
+
                 for (PropertyDescriptor pd : pds) {
                     // 如果bean的属性名和配置文件得到的pv的name相同
                     if(pd.getName().equals(propertyName)){
