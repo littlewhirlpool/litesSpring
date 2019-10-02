@@ -30,4 +30,26 @@ public abstract class StringUtils {
         return false;
     }
 
+    /**
+     * trim
+     * @param str
+     * @return
+     */
+    public static String trimAllWhitespace(String str) {
+        if (!hasLength(str)) {
+            return str;
+        }
+        StringBuilder sb = new StringBuilder(str);
+        int index = 0;
+        while (sb.length() > index) {
+            if (Character.isWhitespace(sb.charAt(index))) {
+                sb.deleteCharAt(index);
+            }
+            else {
+                index++;
+            }
+        }
+        return sb.toString();
+    }
+
 }

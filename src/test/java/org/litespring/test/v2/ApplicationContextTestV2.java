@@ -24,7 +24,10 @@ public class ApplicationContextTestV2 {
         assertNotNull(petStore.getItemDao());
 
 
+        // 测试property 是 TypedString
         assertEquals("wzf" , petStore.getOwner());
+        // 测试 TypedString 值为整型
+        assertEquals(2 , petStore.getVersion());
     }
 
 }

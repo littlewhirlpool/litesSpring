@@ -2,6 +2,7 @@ package org.litespring.beans.factory.support;
 
 import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.PropertyValue;
+import org.litespring.beans.SimpleTypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 import org.litespring.util.ClassUtils;
@@ -50,8 +51,9 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
             Object bean = this.getSingleton(beanID);
             if(bean == null){
                 // 获取为空 可能是未注册
-                // 创建bean并注册
+                // 创建bean
                 bean = createBean(bd);
+                // 并注册
                 this.registerSingleton(beanID , bean);
             }
             return bean;
@@ -69,6 +71,11 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         return bean;
     }
 
+    /**
+     * 使用类的加载器 根据beanDefinition中的全路径类名得到字节码对象 反射为对象
+     * @param bd
+     * @return
+     */
     private Object instantiateBean(BeanDefinition bd){
         ClassLoader cl = this.getBeanClassLoader();
         //通过类的定义对象得到类的classname
@@ -82,6 +89,11 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         }
     }
 
+    /**
+     * 补充完善bean
+     * @param bd
+     * @param bean
+     */
     protected void populateBean(BeanDefinition bd , Object bean){
         // 得到bd 的 PropertyValues
         List<PropertyValue> pvs = bd.getPropertyValues();
@@ -94,11 +106,13 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         BeanDefinitionValueResolver valueResolver = new BeanDefinitionValueResolver(this);
 
         try {
+            // 遍历每一个property标签解析出的 PropertyValue对象
             for (PropertyValue pv : pvs) {
                 String propertyName = pv.getName();
                 Object originalValue = pv.getValue();
                 // 调用resolveValueIfNecessary方法传入value 得到映射的对象(ref/typedString)
                 Object resolvedValue = valueResolver.resolveValueIfNecessary(originalValue);
+                SimpleTypeConverter converter = new SimpleTypeConverter();
 
                 // 得到bean的BeanInfo对象
                 BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass());
@@ -107,8 +121,10 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
                 for (PropertyDescriptor pd : pds) {
                     // 如果bean的属性名和配置文件得到的pv的name相同
                     if(pd.getName().equals(propertyName)){
+                        // 如果有必要就转化  pd.getPropertyType:bean属性的类型
+                        Object convertedValue = converter.convertIfNecessary(resolvedValue, pd.getPropertyType());
                         // 得到该属性的set方法 将对于的对象传递进去
-                        pd.getWriteMethod().invoke(bean,resolvedValue);
+                        pd.getWriteMethod().invoke(bean,convertedValue);
                         break;
                     }
                 }

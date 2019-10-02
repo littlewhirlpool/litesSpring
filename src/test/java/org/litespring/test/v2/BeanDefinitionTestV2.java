@@ -32,7 +32,7 @@ public class BeanDefinitionTestV2 {
         List<PropertyValue> pvs = bd.getPropertyValues();
 
         // 校验是否是两个propertyValue
-        Assert.assertTrue(pvs.size() == 2);
+        Assert.assertTrue(pvs.size() == 4);
         // 校验accountDao为name属性的propertyvalue是否存在
         {
             PropertyValue pv = this.getPropertyValue("accountDao",pvs);
