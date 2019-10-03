@@ -2,7 +2,9 @@ package org.litespring.test.v4;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.litespring.core.annotation.AnnotationAttributes;
 import org.litespring.core.io.ClassPathResource;
+import org.litespring.core.type.classreading.AnnotationMetadataReadingVisitor;
 import org.litespring.core.type.classreading.ClassMetadataReadingVisitor;
 import org.springframework.asm.ClassReader;
 
@@ -16,6 +18,10 @@ import java.io.IOException;
  **/
 public class ClassReaderTest {
 
+    /**
+     * 测试ASM效果自定义的Visitor交给reader后 能够被执行重写的方法
+     * @throws IOException
+     */
 	@Test
 	public void testGetClasMetaData() throws IOException {
 		ClassPathResource resource = new ClassPathResource("org/litespring/service/v4/PetStoreService.class");
@@ -33,22 +39,26 @@ public class ClassReaderTest {
 		Assert.assertEquals(0, visitor.getInterfaceNames().length);
 	}
 
-//    @Test
-//    public void testGetAnnonation() throws Exception{
-//        ClassPathResource resource = new ClassPathResource("org/litespring/service/v4/PetStoreService.class");
-//        ClassReader reader = new ClassReader(resource.getInputStream());
-//
-//        AnnotationMetadataReadingVisitor visitor = new AnnotationMetadataReadingVisitor();
-//
-//        reader.accept(visitor, ClassReader.SKIP_DEBUG);
-//
-//        String annotation = "org.litespring.stereotype.Component";
-//        Assert.assertTrue(visitor.hasAnnotation(annotation));
-//
-//        AnnotationAttributes attributes = visitor.getAnnotationAttributes(annotation);
-//
-//        Assert.assertEquals("petStore", attributes.get("value"));
-//
-//    }
+    /**
+     * 测试注解获取功能
+     * @throws Exception
+     */
+    @Test
+    public void testGetAnnonation() throws Exception{
+        ClassPathResource resource = new ClassPathResource("org/litespring/service/v4/PetStoreService.class");
+        ClassReader reader = new ClassReader(resource.getInputStream());
+
+        AnnotationMetadataReadingVisitor visitor = new AnnotationMetadataReadingVisitor();
+
+        reader.accept(visitor, ClassReader.SKIP_DEBUG);
+
+        String annotation = "org.litespring.stereotype.Component";
+        Assert.assertTrue(visitor.hasAnnotation(annotation));
+
+        AnnotationAttributes attributes = visitor.getAnnotationAttributes(annotation);
+
+        Assert.assertEquals("petStore", attributes.get("value"));
+
+    }
 
 }
