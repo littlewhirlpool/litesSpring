@@ -20,4 +20,14 @@ public interface BeanDefinition {
 
     public List<PropertyValue> getPropertyValues();
 
+    /**
+     * 得到封装好的构造函数
+     * @return
+     */
+    public ConstructorArgument getConstructorArgument();
+
+    public String getID();
+
+    public boolean hasConstructorArgumentValues();
+
 }

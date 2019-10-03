@@ -45,6 +45,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
             throw new BeanCreationException("Bean Definition does not exist");
         }
 
+        // 如果是单例 就从单例里获取 如果不是就新建一个对象
         if(bd.isSingleton()){
             // 单例
             // 通过beanID获取实例
@@ -77,6 +78,10 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
      * @return
      */
     private Object instantiateBean(BeanDefinition bd){
+        if(bd.hasConstructorArgumentValues()){
+            ConstructorResolver resolver = new ConstructorResolver(this);
+            return resolver.autowireConstructor(bd);
+        }
         ClassLoader cl = this.getBeanClassLoader();
         //通过类的定义对象得到类的classname
         String beanClassName = bd.getBeanClassName();
@@ -124,7 +129,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
                     if(pd.getName().equals(propertyName)){
                         // 如果有必要就转化  pd.getPropertyType:bean属性的类型
                         Object convertedValue = converter.convertIfNecessary(resolvedValue, pd.getPropertyType());
-                        // 得到该属性的set方法 将对于的对象传递进去
+                        // 得到该属性的set方法 将对于的对象传递进去  setter注入成功!!
                         pd.getWriteMethod().invoke(bean,convertedValue);
                         break;
                     }

@@ -1,18 +1,19 @@
 package org.litespring.beans.factory.support;
 
+import org.litespring.beans.factory.BeanFactory;
 import org.litespring.beans.factory.config.RuntimeBeanReference;
 import org.litespring.beans.factory.config.TypedStringValue;
 
 /**
  * @program: litespring->BeanDefinitionValueResolver
- * @description:
+ * @description: 值处理器
  * @author: weizhenfang
  * @create: 2019-10-01 22:41
  **/
 public class BeanDefinitionValueResolver {
-    private final DefaultBeanFactory beanFactory;
+    private final BeanFactory beanFactory;
 
-    public BeanDefinitionValueResolver(DefaultBeanFactory beanFactory) {
+    public BeanDefinitionValueResolver(BeanFactory beanFactory) {
         this.beanFactory = beanFactory;
     }
 
