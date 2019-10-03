@@ -1,7 +1,7 @@
-package org.litespring.service.v3;
+package org.litespring.service.v4;
 
-import org.litespring.dao.v3.AccountDao;
-import org.litespring.dao.v3.ItemDao;
+import org.litespring.dao.v4.AccountDao;
+import org.litespring.dao.v4.ItemDao;
 
 /**
  * @program: litespring->PetStoreService
@@ -14,13 +14,13 @@ public class PetStoreService {
     private ItemDao itemDao;
     private int version;
 
-    public PetStoreService (AccountDao accountDao , ItemDao itemDao  ){
+    public PetStoreService(AccountDao accountDao , ItemDao itemDao  ){
         this.accountDao = accountDao;
         this.itemDao = itemDao;
         this.version = -1;
     }
 
-    public PetStoreService (AccountDao accountDao , ItemDao itemDao , int version){
+    public PetStoreService(AccountDao accountDao , ItemDao itemDao , int version){
         this.accountDao = accountDao;
         this.itemDao = itemDao;
         this.version = version;

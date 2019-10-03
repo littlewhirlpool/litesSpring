@@ -28,7 +28,9 @@ public class ConstructorResolver {
 
     /**
      * 自动装配构造
-     * 思路: 参数一致的构造函数才可以使用 , 根据bd中的参数类型使用valueResolver得到对应的对象或者String/Boolean/integer值  传入参数得到实例
+     * 思路: 参数一致的构造函数才可以使用 ,
+     * 根据bd中的参数类型使用valueResolver得到对应的对象或者String/Boolean/integer值
+     * 传入参数得到实例
      * @param bd
      * @return
      */
