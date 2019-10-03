@@ -47,10 +47,11 @@ public class PackageResourceLoader {
         Assert.notNull(basePackage , "basePackage must not be null");
         String location = ClassUtils.convertClassNameToResourcePath(basePackage);
         ClassLoader cl = getClassLoader();
+        // 使用classload而得到一个URL对象
         URL url = cl.getResource(location);
-        File rortDir = new File(url.getFile());
+        File rootDir = new File(url.getFile());
 
-        Set<File> matchingFiles = retrieveMatchingFiles(rortDir);
+        Set<File> matchingFiles = retrieveMatchingFiles(rootDir);
         Resource[] result = new Resource[matchingFiles.size()];
         int i = 0;
         for (File file : matchingFiles) {
