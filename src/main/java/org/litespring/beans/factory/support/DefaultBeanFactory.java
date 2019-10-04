@@ -148,7 +148,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
      * @param beanID
      * @param bd
      */
-    public void registerBeanDefinition(String beanID, GenericBeanDefinition bd) {
+    public void registerBeanDefinition(String beanID, BeanDefinition bd) {
         this.beanDefinitionMap.put(beanID,bd);
     }
 

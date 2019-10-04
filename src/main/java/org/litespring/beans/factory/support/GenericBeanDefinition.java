@@ -30,9 +30,15 @@ public class GenericBeanDefinition implements BeanDefinition {
         this.id = id;
         this.beanClassName = beanClassName;
     }
+    public GenericBeanDefinition() {
+
+    }
 
     public String getBeanClassName() {
         return this.beanClassName;
+    }
+    public void setBeanClassName(String className){
+        this.beanClassName = className;
     }
 
     public List<PropertyValue> getPropertyValues() {
@@ -63,6 +69,9 @@ public class GenericBeanDefinition implements BeanDefinition {
         return this.scope;
     }
 
+    public void setId(String id){
+        this.id = id;
+    }
     /**
      * set scope 属性的时候 更新singleton和prototype的属性
      * @param scope

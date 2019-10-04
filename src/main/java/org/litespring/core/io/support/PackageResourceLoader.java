@@ -51,15 +51,22 @@ public class PackageResourceLoader {
         URL url = cl.getResource(location);
         File rootDir = new File(url.getFile());
 
+        // 得到rootDir下的file set
         Set<File> matchingFiles = retrieveMatchingFiles(rootDir);
         Resource[] result = new Resource[matchingFiles.size()];
         int i = 0;
+        // 将file set 中的file 转化为 resource
         for (File file : matchingFiles) {
             result[i++] = new FileSystemResource(file);
         }
         return result;
     }
 
+    /**
+     * 校验数据 封装操作
+     * @param rootDir
+     * @return
+     */
     private Set<File> retrieveMatchingFiles(File rootDir) {
         if(!rootDir.exists()){
             // Silently skip non-existing directories
@@ -109,7 +116,8 @@ public class PackageResourceLoader {
 
         for (File content : dirContents) {
             if (content.isDirectory()){
-                if (content.canRead()){
+                // 文件夹
+                if (!content.canRead()){
                     if (!logger.isDebugEnabled()){
                         logger.debug("Skipping subdirectory [" + dir.getAbsolutePath() +
                                 "] because the application is not allowed to read the directory");
@@ -119,6 +127,7 @@ public class PackageResourceLoader {
                 }
 
             }else{
+                // 是文件
                 result.add(content);
             }
         }
