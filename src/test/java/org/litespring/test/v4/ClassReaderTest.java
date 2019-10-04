@@ -46,11 +46,15 @@ public class ClassReaderTest {
     @Test
     public void testGetAnnonation() throws Exception{
         ClassPathResource resource = new ClassPathResource("org/litespring/service/v4/PetStoreService.class");
+        // 使用ASM的ClassReader
         ClassReader reader = new ClassReader(resource.getInputStream());
 
+        // 创建继承ClassVisitor父类的自定义的visitor对象
         AnnotationMetadataReadingVisitor visitor = new AnnotationMetadataReadingVisitor();
 
+        // 将visitor通过accept方法传递给reader
         reader.accept(visitor, ClassReader.SKIP_DEBUG);
+
 
         String annotation = "org.litespring.stereotype.Component";
         Assert.assertTrue(visitor.hasAnnotation(annotation));

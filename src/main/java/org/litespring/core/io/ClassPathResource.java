@@ -30,6 +30,7 @@ public class ClassPathResource implements Resource {
         InputStream is = this.classLoader.getResourceAsStream(this.path);
 
         if(is == null){
+            // 这里要抛出异常来表示功能未能完成
             throw new FileNotFoundException(path + " cannt be opend");
         }
         return  is;
