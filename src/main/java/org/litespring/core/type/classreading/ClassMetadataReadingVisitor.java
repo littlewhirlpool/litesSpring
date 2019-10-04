@@ -7,7 +7,8 @@ import org.springframework.asm.Opcodes;
 import org.springframework.asm.SpringAsmInfo;
 
 
-
+// ClassVisitor为ASM的类 其子类能作为参数调用reader的accept方法 然后
+// ClassMetadata为自定义的接口 定义对类元数据的一些操作
 public class ClassMetadataReadingVisitor extends ClassVisitor implements ClassMetadata  /*implements ClassMetadata*/ {
 
     private String className;
@@ -29,6 +30,16 @@ public class ClassMetadataReadingVisitor extends ClassVisitor implements ClassMe
     }
 
 
+    /**
+     * reader 调用此方法将类的信息传递过来 , 处理后封装到自己的属性中去
+     * ClassVisitor
+     * @param version
+     * @param access
+     * @param name
+     * @param signature
+     * @param supername
+     * @param interfaces
+     */
     @Override
     public void visit(int version, int access, String name, String signature, String supername, String[] interfaces) {
         this.className = ClassUtils.convertResourcePathToClassName(name);

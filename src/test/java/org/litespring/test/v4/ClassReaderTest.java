@@ -45,8 +45,9 @@ public class ClassReaderTest {
      */
     @Test
     public void testGetAnnonation() throws Exception{
+        // ClassPathResource通过构造函数将类路径传入 , 调用getResourceAsStream方法是通过类的加载器的getResourceAsStream返回字节流
         ClassPathResource resource = new ClassPathResource("org/litespring/service/v4/PetStoreService.class");
-        // 使用ASM的ClassReader
+        // 使用ASM的ClassReader 传入字节流
         ClassReader reader = new ClassReader(resource.getInputStream());
 
         // 创建继承ClassVisitor父类的自定义的visitor对象

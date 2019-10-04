@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ *
  * @program: litespring->ClassPathResource
  * @description:
  * @author: weizhenfang
@@ -17,6 +18,7 @@ public class ClassPathResource implements Resource {
     private String path;
     private ClassLoader classLoader;
 
+    // ClassPathResource通过构造函数将类路径传入 , 调用getResourceAsStream方法是通过类的加载器的getResourceAsStream返回字节流
     public ClassPathResource(String path) {
         this(path , (ClassLoader)null);
     }
