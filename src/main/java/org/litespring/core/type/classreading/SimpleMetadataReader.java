@@ -12,7 +12,7 @@ import java.io.InputStream;
 
 /**
  * @program: litespring->SimpleMetadataReader
- * @description:
+ * @description: 将创建reader , 调用accept方法封装
  * @author: weizhenfang
  * @create: 2019-10-03 20:52
  **/
@@ -32,11 +32,16 @@ public class SimpleMetadataReader implements MetadataReader {
             is.close();
         }
 
+        // 初始化一个visitor
         AnnotationMetadataReadingVisitor visitor = new AnnotationMetadataReadingVisitor();
+        // 注册给reader
         classReader.accept(visitor , ClassReader.SKIP_DEBUG);
 
-        this.annotationMetadata = visitor;
-        this.classMetadata = visitor;
+        // 由于visitor继承了ClassMetadataReadingVisitor所以继承了visitor()方法 具有读取类信息的功能
+        // visitor自己又重写visitAnnotation方法具有读取注解信息的能力
+
+        this.annotationMetadata = visitor; // 注解数据相关功能  自定义的用来定义对得到的数据的交互
+        this.classMetadata = visitor;   // 类数据相关功能  自定义的用来定义对得到的数据的交互
         this.resource = resource;
 
     }
