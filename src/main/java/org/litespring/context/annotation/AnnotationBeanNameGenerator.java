@@ -6,10 +6,12 @@ import org.litespring.beans.factory.support.BeanDefinitionRegistry;
 import org.litespring.beans.factory.support.BeanNameGenerator;
 import org.litespring.core.annotation.AnnotationAttributes;
 import org.litespring.core.type.AnnotationMetadata;
+import org.litespring.stereotype.Component;
 import org.litespring.util.ClassUtils;
 import org.litespring.util.StringUtils;
 
 import java.beans.Introspector;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -32,18 +34,24 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
         return buildDefaultBeanName(definition, registry);
     }
 
-    /**
+    /**AnnotatedBeanDefinition:通过注解得到bean定义
+     * 得到Component注解value值 如@Component(value = "petStore")的 petStore
      * Derive a bean name from one of the annotations on the class.
      * @param annotatedDef the annotation-aware bean definition
      * @return the bean name, or {@code null} if none is found
      */
     protected String determineBeanNameFromAnnotation(AnnotatedBeanDefinition annotatedDef) {
+        // 得到metaData封装了注解信息
         AnnotationMetadata amd = annotatedDef.getMetadata();
+        // 得到一个类所有的注解set
         Set<String> types = amd.getAnnotationTypes();
         String beanName = null;
         for (String type : types) {
+            // 得到某个注解的所有attributes
             AnnotationAttributes attributes = amd.getAnnotationAttributes(type);
-            if (attributes.get("value") != null) {  //得到注解 value 的值
+            // 如果是Component注解且value有值
+            if (isStereotypeWithNameValue(type,attributes)) {
+                //得到注解 value 的值
                 Object value = attributes.get("value");
                 if (value instanceof String) {
                     String strVal = (String) value;
@@ -56,6 +64,15 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
         return beanName;
     }
 
+    protected boolean isStereotypeWithNameValue(String annotationType, Map<String, Object> attributes) {
+
+        boolean isStereotype = annotationType.equals(Component.class.getName()); /*||
+				(metaAnnotationTypes != null && metaAnnotationTypes.contains(COMPONENT_ANNOTATION_CLASSNAME)) ||
+				annotationType.equals("javax.annotation.ManagedBean") ||
+				annotationType.equals("javax.inject.Named");*/
+
+        return (isStereotype && attributes != null && attributes.containsKey("value"));
+    }
 
     /**
      * Derive a default bean name from the given bean definition.

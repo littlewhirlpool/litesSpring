@@ -18,7 +18,9 @@ import java.util.Set;
  * @create: 2019-10-03 18:31
  **/
 public class AnnotationMetadataReadingVisitor extends ClassMetadataReadingVisitor implements AnnotationMetadata /*implements  AnnotationMetadata */{
+    // 一个类拥有的注解set
     private final Set<String> annotationSet = new LinkedHashSet<String>(4);
+    // 每一个注解的属性
     private final Map<String, AnnotationAttributes> attributeMap = new LinkedHashMap<String, AnnotationAttributes>(4);
 
     public AnnotationMetadataReadingVisitor(){}
