@@ -5,6 +5,7 @@ import org.litespring.beans.PropertyValue;
 import org.litespring.beans.SimpleTypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
+import org.litespring.beans.factory.config.DependencyDescriptor;
 import org.litespring.util.ClassUtils;
 
 import java.beans.BeanInfo;
@@ -158,5 +159,33 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 
     public ClassLoader getBeanClassLoader() {
         return (this.beanClassLoader != null ? this.beanClassLoader:ClassUtils.getDefaultClassLoader());
+    }
+
+    public Object resolveDependency(DependencyDescriptor descriptor) {
+        Class<?> typeToMatch = descriptor.getDependencyTye();
+        // 遍历所有的bean的定义
+        for (BeanDefinition bd : this.beanDefinitionMap.values()) {
+            // 调用resolveBeanClass确保BeanDefinition 有 Class对象
+            resolveBeanClass(bd);
+            // 得到bd的beanClass
+            Class<?> beanClass = bd.getBeanClass();
+            // 如果bd的beanClass能够
+            if(typeToMatch.isAssignableFrom(beanClass)){
+                return this.getBean(bd.getID());
+            }
+        }
+        return null;
+    }
+
+    public void resolveBeanClass(BeanDefinition bd ){
+        if(bd.hasBeanClass()){
+            return;
+        } else {
+            try {
+                bd.resolveBeanClass(this.getBeanClassLoader());
+            }catch (ClassNotFoundException e){
+                throw new RuntimeException("can't load class" + bd.getBeanClassName());
+            }
+        }
     }
 }

@@ -30,4 +30,12 @@ public interface BeanDefinition {
 
     public boolean hasConstructorArgumentValues();
 
+
+    public Class<?> resolveBeanClass(ClassLoader classLoader) throws ClassNotFoundException;
+
+    public Class<?> getBeanClass() throws IllegalArgumentException;
+
+    public boolean hasBeanClass();
+
+
 }
