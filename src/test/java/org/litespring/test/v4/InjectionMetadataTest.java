@@ -41,7 +41,7 @@ public class InjectionMetadataTest {
 
         {
             // 构建InjectionMetadata 将 字段和工厂 封装进InjectionElementList
-            Field f = PetStoreService.class.getDeclaredField("accountDao");
+            Field f = PetStoreService.class.getDeclaredField("accountDao");  //这里是手动得到需要注入的字段 后面根据注解得到需要注入的字段
             InjectionElement injectionElem = new AutowiredFieldElement(f,true,factory);
             elements.add(injectionElem);
         }

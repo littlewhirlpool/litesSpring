@@ -22,6 +22,11 @@ public class SimpleMetadataReader implements MetadataReader {
     private final ClassMetadata classMetadata;
     private final AnnotationMetadata annotationMetadata;
 
+    /**
+     * 构造函数完成封装使用visitor功能
+     * @param resource
+     * @throws IOException
+     */
     public SimpleMetadataReader(Resource resource) throws IOException{
         InputStream is = new BufferedInputStream(resource.getInputStream());
         ClassReader classReader;

@@ -20,7 +20,7 @@ public class DependencyDescriptor {
      * 根据this.filed得到字节码其对象
      * @return
      */
-    public Class<?> getDependencyTye(){
+    public Class<?> getDependencyType(){
         if(this.field != null){
             return field.getType();
         }

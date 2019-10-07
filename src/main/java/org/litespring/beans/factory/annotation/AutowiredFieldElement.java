@@ -12,6 +12,8 @@ import java.lang.reflect.Field;
  * @description: 自动注入的字段类型
  * @author: weizhenfang
  * @create: 2019-10-06 10:59
+ * 继承的父类InjectionElement持有factory 可以使用 resolveDependency 方法得到依赖的bean
+ * DependencyDescriptor封装依赖字段的信息
  **/
 public class AutowiredFieldElement extends InjectionElement {
     boolean required;
@@ -27,7 +29,7 @@ public class AutowiredFieldElement extends InjectionElement {
 
 
     /**
-     * 将this.fied 注入到targetClass
+     * 将this.fied 注入到target
      * @param target
      */
     @Override

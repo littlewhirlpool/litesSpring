@@ -56,6 +56,7 @@ public class ConstructorResolver {
         ConstructorArgument cargs = bd.getConstructorArgument();
         SimpleTypeConverter typeConverter = new SimpleTypeConverter();
 
+        // 遍历字节码的所有构造函数
         for (int i = 0; i<candidates.length;i++){
             // 得到构造函数的参数列表
             Class<?>[] parameterTypes = candidates[i].getParameterTypes();

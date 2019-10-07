@@ -79,6 +79,7 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
      * @return
      */
     private Object instantiateBean(BeanDefinition bd){
+        // 如果bd包含constructor标签 说明要使用构造器注入
         if(bd.hasConstructorArgumentValues()){
             ConstructorResolver resolver = new ConstructorResolver(this);
             return resolver.autowireConstructor(bd);
@@ -161,8 +162,16 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         return (this.beanClassLoader != null ? this.beanClassLoader:ClassUtils.getDefaultClassLoader());
     }
 
+    /**
+     * 处理依赖
+     * @param descriptor 依赖描述对象
+     * @return  依赖指向的对象
+     * 1.得到descriptor的Class<?> typeToMatch =
+     * 2.遍历this.beanDefinitionMap 如果bd的beanClass和typeToMatch匹配 说明 依赖的对象和bd指向的对象是同一个
+     * 3.调用factory.getBean()方法 得到bean , 返回
+     */
     public Object resolveDependency(DependencyDescriptor descriptor) {
-        Class<?> typeToMatch = descriptor.getDependencyTye();
+        Class<?> typeToMatch = descriptor.getDependencyType();
         // 遍历所有的bean的定义
         for (BeanDefinition bd : this.beanDefinitionMap.values()) {
             // 调用resolveBeanClass确保BeanDefinition 有 Class对象
@@ -177,11 +186,16 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         return null;
     }
 
+    /**
+     * 处理bd的Class<?> beanClass 属性
+     * @param bd BeanDefinition bean的定义
+     */
     public void resolveBeanClass(BeanDefinition bd ){
         if(bd.hasBeanClass()){
             return;
         } else {
             try {
+                // 调用bd的resolveBeanClass方法
                 bd.resolveBeanClass(this.getBeanClassLoader());
             }catch (ClassNotFoundException e){
                 throw new RuntimeException("can't load class" + bd.getBeanClassName());
