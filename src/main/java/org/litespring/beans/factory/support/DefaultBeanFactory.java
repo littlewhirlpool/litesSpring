@@ -4,13 +4,16 @@ import org.litespring.beans.BeanDefinition;
 import org.litespring.beans.PropertyValue;
 import org.litespring.beans.SimpleTypeConverter;
 import org.litespring.beans.factory.BeanCreationException;
+import org.litespring.beans.factory.config.BeanPostProcessor;
 import org.litespring.beans.factory.config.ConfigurableBeanFactory;
 import org.litespring.beans.factory.config.DependencyDescriptor;
+import org.litespring.beans.factory.config.InstantiationAwareBeanPostProcessor;
 import org.litespring.util.ClassUtils;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,6 +26,10 @@ import java.util.concurrent.ConcurrentHashMap;
  **/
 public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         implements  BeanDefinitionRegistry , ConfigurableBeanFactory {
+
+    private List<BeanPostProcessor> beanPostProcessors = new ArrayList();
+
+
     // 类定义的id-定义 键值对  map  注意键值对的类型
     private final Map<String , BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<String, BeanDefinition>();
     private ClassLoader beanClassLoader;
@@ -102,6 +109,14 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
      * @param bean
      */
     protected void populateBean(BeanDefinition bd , Object bean){
+
+        for(BeanPostProcessor processor : this.getBeanPostProcessors()){
+            if(processor instanceof InstantiationAwareBeanPostProcessor){
+                ((InstantiationAwareBeanPostProcessor)processor).postProcessPropertyValues(bean, bd.getID());
+            }
+        }
+
+
         // 得到bd 的 PropertyValues
         List<PropertyValue> pvs = bd.getPropertyValues();
 
@@ -160,6 +175,13 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
 
     public ClassLoader getBeanClassLoader() {
         return (this.beanClassLoader != null ? this.beanClassLoader:ClassUtils.getDefaultClassLoader());
+    }
+
+    public void addBeanPostProcessor(BeanPostProcessor postProcessor){
+        this.beanPostProcessors.add(postProcessor);
+    }
+    public List<BeanPostProcessor> getBeanPostProcessors() {
+        return this.beanPostProcessors;
     }
 
     /**

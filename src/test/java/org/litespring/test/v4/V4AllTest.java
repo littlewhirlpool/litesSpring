@@ -19,7 +19,8 @@ import org.junit.runners.Suite;
                 XmlBeanDefinitionReaderTest.class,
                 InjectionMetadataTest.class,
                 DependencyDescriptorTest.class,
-                AutowiredAnnotationProcessorTest.class
+                AutowiredAnnotationProcessorTest.class,
+                ApplicationContextTestV4.class
         }
 )
 public class V4AllTest {

@@ -16,10 +16,6 @@ public class FileSystemApplicationContext extends AbstractApplicationContext {
 
     }
 
-    public Object getBean(String beanID) {
-        return factory.getBean(beanID);
-    }
-
     protected Resource getResourceByPath(String path) {
         return new FileSystemResource(path);  //使用FileSystemResource得到Resource
     }
