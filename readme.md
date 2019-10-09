@@ -1,11 +1,7 @@
-
-
-两个业务:
-1. 读取配置文件,得到bean的定义 definition 
-2. 创建bean.
-
-
-BeansException 根 Exception 继承RuntimeException 
-
-RuntimeException是一个unchecked exception 可以不去catch 但是一旦出
-错就是一个runtime的exception
+功能点:
+通过配置文件得到bean的定义
+通过配置文件得到bean
+通过配置文件的属性配置设置bean属性的setter注入
+通过配置文件的构造配置设置bean属性的setter注入
+通过注解得到bean的定义
+通过注解注入属性(字段方式不支持方法/构造)
