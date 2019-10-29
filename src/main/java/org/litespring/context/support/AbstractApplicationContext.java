@@ -30,6 +30,11 @@ public abstract class AbstractApplicationContext implements ApplicationContext {
         this(configFile,ClassUtils.getDefaultClassLoader());
     }
 
+    /**
+     * 构造函数:新建factory 新建reader 新建resource  reader load resource
+     * @param configFile
+     * @param cl
+     */
     public AbstractApplicationContext(String configFile,ClassLoader cl) {
         // 新建factory对象
         factory = new DefaultBeanFactory();

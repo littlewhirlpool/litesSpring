@@ -71,6 +71,11 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
         return createBean(bd);
     }
 
+    /**
+     * 无论是否为单例 都是同一个creatBean方法
+     * @param bd
+     * @return
+     */
     private Object createBean (BeanDefinition bd){
         // 创建实例
         Object bean = instantiateBean(bd);
@@ -81,7 +86,8 @@ public class DefaultBeanFactory extends DefaultSingletonBeanRegistry
     }
 
     /**
-     * 使用类的加载器 根据beanDefinition中的全路径类名得到字节码对象 反射为对象
+     * 如果是配置构造函数的bean使用ConstructorResolver
+     * 普通的使用ClassLoader加载字节码对象再反射
      * @param bd
      * @return
      */

@@ -107,12 +107,16 @@ public class XmlBeanDefinitionReader {
      * @param ele
      */
     private void parseDefaultElement(Element ele) {
+        // 解析bean标签上的属性:
         String id = ele.attributeValue(ID_ATTRIBUTE);
         String beanClassName = ele.attributeValue(CLASS_ATTRIBUTE);
         BeanDefinition bd = new GenericBeanDefinition(id, beanClassName);
         if(ele.attribute(SCOPE_ATTRIBUTE) != null){
             bd.setScope(ele.attributeValue(SCOPE_ATTRIBUTE));
         }
+
+
+        // 解析bean标签内的标签:
         // 解析构造配置
         parseConstructorArgElements(ele , bd);
         // 解析属性配置
@@ -146,7 +150,7 @@ public class XmlBeanDefinitionReader {
         String typeAttr = ele.attributeValue(TYPE_ATTRIBUTE);
         String nameAttr = ele.attributeValue(NAME_ATTRIBUTE);
 //        得到一个TypedStringValue / RuntimeBeanReference 对象
-        Object value = parsePropertyValue(ele, bd, null);
+        Object value = parsePropertyValue(ele, null);
         ConstructorArgument.ValueHolder valueHolder = new ConstructorArgument.ValueHolder(value);
 
         if(StringUtils.hasLength(typeAttr)){
@@ -178,7 +182,7 @@ public class XmlBeanDefinitionReader {
             }
 
             // 得到一个TypedStringValue / RuntimeBeanReference 对象
-            Object val = parsePropertyValue(proElem, bd, propertyName);
+            Object val = parsePropertyValue(proElem, propertyName);
             // 封装为PropertyValue
             PropertyValue pv = new PropertyValue(propertyName, val);
 
@@ -189,12 +193,12 @@ public class XmlBeanDefinitionReader {
 
     /**
      * 得到一个TypedStringValue / RuntimeBeanReference 对象
+     * 在属性/构造标签下通用
      * @param ele
-     * @param bd
      * @param propertyName
      * @return
      */
-    public Object parsePropertyValue(Element ele , BeanDefinition bd,String propertyName){
+    public Object parsePropertyValue(Element ele ,String propertyName){
         String elementName = (propertyName != null) ?
                 "<property> element for property '" + propertyName + "'" : "<constructor-arg> element";
         // 判断是ref/value

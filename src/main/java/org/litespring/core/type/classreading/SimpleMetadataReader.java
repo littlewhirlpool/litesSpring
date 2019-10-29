@@ -19,7 +19,9 @@ import java.io.InputStream;
 public class SimpleMetadataReader implements MetadataReader {
 
     private final Resource resource;
+    // 字节码元数据
     private final ClassMetadata classMetadata;
+    // 注解元数据
     private final AnnotationMetadata annotationMetadata;
 
     /**
